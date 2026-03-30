@@ -15,6 +15,7 @@ module processor_top( // declaration of processor module which will instantiate 
     wire [15:0] imm_ext; //sign extended immediate value
     wire [15:0] alu_result; // result from the ALU operation
     wire [15:0] alu_in_b; //second input to the alu, either the val frm reg1ister or the sign extended immediate
+    
 
     wire [15:0] reg1 = 16'b0; //holds the value from source register
     wire [15:0] reg2 = 16'b0; //holds the value frm destination register
@@ -35,6 +36,7 @@ module processor_top( // declaration of processor module which will instantiate 
     );
 
     sign_extend se ( //module declaration for sign extension for immediate value
+        .imm_in(imm4),
         .imm_out(imm_ext)
     );
 
