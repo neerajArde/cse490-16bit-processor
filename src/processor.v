@@ -15,6 +15,7 @@ module processor_top( // declaration of processor module which will instantiate 
     wire [15:0] imm_ext; //sign extended immediate value
     wire [15:0] alu_result; // result from the ALU operation
     wire [15:0] alu_in_b; //second input to the alu, either the val frm reg1ister or the sign extended immediate
+    wire [15:0] mem_read_data;
     
 
     wire [15:0] reg1 = 16'b0; //holds the value from source register
@@ -55,4 +56,12 @@ module processor_top( // declaration of processor module which will instantiate 
         .Zero()
     );
 
+    data_memory dmem (
+        .clk(clk),
+        .MemRead(1'b0),
+        .MemWrite(1'b0),
+        .addr(alu_result),
+        .write_data(reg2),
+        .read_data(mem_read_data)
+    );
 endmodule
