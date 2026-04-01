@@ -8,12 +8,17 @@ module instruction_memory(addr, instruction);
 input [15:0] addr;
 output [15:0] instruction;
 
+/* Safe byte indices: always in [0:255] (second byte uses base when base==255) */
+wire [7:0] base_idx = addr[7:0];
+wire [8:0] byte_sum = {1'b0, base_idx} + 9'd1;
+wire [7:0] hi_idx   = byte_sum[8] ? base_idx : byte_sum[7:0];
+
 /* 256-byte instruction memory */
 reg [7:0] mem [0:255];
 integer i;
 
 /* instruction stored in two bytes */
-assign instruction = {mem[addr], mem[addr + 1]};
+assign instruction = {mem[base_idx], mem[hi_idx]};
 
 initial begin
     /* clear memory */
