@@ -83,20 +83,20 @@ module processor_tb;
             proc_inst.Branch,
             proc_inst.zero,
             proc_inst.branchDecision,
-            (proc_inst.Branch == 1'b1 && proc_inst.zero == 1'b0 && proc_inst.branchDecision == 1'b0) ? "passed beq" : "failed beq");
+        (proc_inst.Branch == 1'b1 && proc_inst.zero == 1'b1 && proc_inst.branchDecision == 1'b1) ? "passed beq" : "failed beq");        
         #10;
-        $display("checking addi : RF_WD=%04h (expect 0001) %s",
+        $display("checking addi skipped : RF_WD=%04h (expect 0000 - skipped by beq) %s",
             proc_inst.wbdata,
-            (proc_inst.wbdata == 16'h0001) ? "passed addi" : "failed addi");
-        #10;// jump 
+            (proc_inst.wbdata == 16'h0000) ? "passed addi skipped" : "failed addi skipped");
+        #20;// jump 
         $display("checking jump : Jump=%b    (expect 1)    %s",
             proc_inst.Jump,
             (proc_inst.Jump == 1'b1) ? "passed jump" : "failed jump");
-        #10;//final check to ensure prgcount back to 0 affter jump
+        #10; //final check to ensure prgcount back to 0 affter jump
         $display("checking jump landing: PC=%04h (expect 0000) %s",
             proc_inst.pc_current,
             (proc_inst.pc_current == 16'h0000) ? "passed jump landing" : "failed jump landing");
-
+            
         #450;
         $display("Done at t=%0t", $time);
         $finish;
