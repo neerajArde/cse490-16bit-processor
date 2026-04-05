@@ -94,7 +94,7 @@ module processor_tb;
             proc_inst.pc_current,
             (proc_inst.pc_current == 16'h0000) ? "passed jump landing" : "failed jump landing");
 
-        #450;
+        #160;
         $display("Done at t=%0t", $time);
         $finish;
     end
