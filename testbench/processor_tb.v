@@ -32,7 +32,7 @@ module processor_tb;
 );
        
        // THIS IS THE VERIFICATION PART OF TGE TEST BENCH
-        #15 // tesing for addi $s1, $s0, 5 
+        #5 // tesing for addi $s1, $s0, 5 
         $display("checking addi : RF_WD=%04h (expect 0005) %s",
             proc_inst.wbdata,
             (proc_inst.wbdata == 16'h0005) ? "passed addi $s1, $s0, 5" : "failed addi $s1, $s0, 5");
