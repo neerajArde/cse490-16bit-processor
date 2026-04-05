@@ -88,7 +88,6 @@ module processor_tb;
         $display("checking addi skipped : RF_WD=%04h (expect 0000 - skipped by beq) %s",
             proc_inst.wbdata,
             (proc_inst.wbdata == 16'h0000) ? "passed addi skipped" : "failed addi skipped");
-        #10;// jump 
         $display("checking jump : Jump=%b    (expect 1)    %s",
             proc_inst.Jump,
             (proc_inst.Jump == 1'b1) ? "passed jump" : "failed jump");
