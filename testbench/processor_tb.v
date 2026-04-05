@@ -25,8 +25,77 @@ module processor_tb;
 
         // Signals: see wires in processor.v (wbdata = register file write data)
         $monitor(
-            "t=%0t | PC=%04h | INSTR=%04h | ALU=%04h | DMEM_RD=%04h | RF_WD=%04h",
-            $time, proc_inst.pc_current, proc_inst.instruction, proc_inst.alu_result, proc_inst.mem_read_data, proc_inst.wbdata);
+            "t=%0t | PC=%04h | INSTR=%04h | ALU=%04h | DMEM_RD=%04h | RF_WD=%04h | MemRead=%b | MemWrite=%b | Branch=%b | Jump=%b | Zero=%b",
+            $time, proc_inst.pc_current, proc_inst.instruction, proc_inst.alu_result, proc_inst.mem_read_data, proc_inst.wbdata, proc_inst.RegWrite,proc_inst.MemRead,proc_inst.MemWrite,proc_inst.Branch,
+            proc_inst.Jump,
+            proc_inst.zero
+);
+       
+       // THIS IS THE VERIFICATION PART OF TGE TEST BENCH
+        #15 // tesing for addi $s1, $s0, 5 
+        $display("checking addi : RF_WD=%04h (expect 0005) %s",
+            proc_inst.wbdata,
+            (proc_inst.wbdata == 16'h0005) ? "passed addi $s1, $s0, 5" : "failed addi $s1, $s0, 5");
+        #10;        // addi $s2, $s0, 3 progCounter=0002
+        $display("checking 2nd addi : RF_WD=%04h (expect 0003) %s",
+            proc_inst.wbdata,
+            (proc_inst.wbdata == 16'h0003) ? "passed addi $s2, $s0, 3" : "failed addi $s2, $s0, 3");
+
+        
+        #10; // add  progCounter=0004
+        $display("checking  add  : RF_WD=%04h (expect 0008) %s",
+            proc_inst.wbdata,
+            (proc_inst.wbdata == 16'h0008) ? "passed add" : "failed add");
+
+        // sub progCounter=0006
+        #10;
+        $display("checking  sub  : ALU=%04h   (expect fffb) %s",
+            proc_inst.alu_result,
+            (proc_inst.alu_result == 16'hfffb) ? "passed sub" : "failed sub");
+
+
+        // and  progCounter=0008
+        #10;
+        $display("checking  and  : RF_WD=%04h (expect 0003) %s",
+            proc_inst.wbdata,
+            (proc_inst.wbdata == 16'h0003) ? "passed and" : "failed and");
+        
+        // sll  progCounter=000a
+        #10;
+        $display("checking sll  : RF_WD=%04h (expect 0018) %s",
+            proc_inst.wbdata,
+            (proc_inst.wbdata == 16'h0018) ? "passed sll" : "failed sll");
+ 
+        // sw 
+        #10;
+        $display("checking sw   : MemWr=%b   (expect 1)    %s",
+            proc_inst.MemWrite,
+            (proc_inst.MemWrite == 1'b1) ? "passed sw" : "failed sw");
+ 
+        // lw  
+        #10;
+        $display("checking lw   : DMEM_RD=%04h (expect 0018) %s",
+            proc_inst.mem_read_data,
+            (proc_inst.mem_read_data == 16'h0018) ? "passed lw" : "failed lw");
+         
+        #10; // now testing beq
+        $display("checking beq  : Branch=%b Zero=%b BranchDec=%b (expect Branch=1 Zero=0 BranchDec=0) %s",
+            proc_inst.Branch,
+            proc_inst.zero,
+            proc_inst.branchDecision,
+            (proc_inst.Branch == 1'b1 && proc_inst.zero == 1'b0 && proc_inst.branchDecision == 1'b0) ? "passed beq" : "failed beq");
+        #10;
+        $display("checking addi : RF_WD=%04h (expect 0001) %s",
+            proc_inst.wbdata,
+            (proc_inst.wbdata == 16'h0001) ? "passed addi" : "failed addi");
+        #10;// jump 
+        $display("checking jump : Jump=%b    (expect 1)    %s",
+            proc_inst.Jump,
+            (proc_inst.Jump == 1'b1) ? "passed jump" : "failed jump");
+        #10;//final check to ensure prgcount back to 0 affter jump
+        $display("checking jump landing: PC=%04h (expect 0000) %s",
+            proc_inst.pc_current,
+            (proc_inst.pc_current == 16'h0000) ? "passed jump landing" : "failed jump landing");
 
         #450;
         $display("Done at t=%0t", $time);
