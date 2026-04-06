@@ -1,6 +1,7 @@
 module processor_top( // declaration of processor module which will instantiate all the components of the processor and connect them
     input clk, 
     input reset 
+    output [15:0] pc_out
 );
 
     wire [15:0] instruction; //15:0 means 16 bits, wire declaration to hold the current insturction
@@ -135,4 +136,6 @@ module processor_top( // declaration of processor module which will instantiate 
     .sel(Jump),
     .out(pc_next)
     );
+
+    assign pcValFPGA = pc_current; //this basically gives acces of the current prog counter to the top level 
 endmodule

@@ -16,12 +16,10 @@ module top_level_fpga(
 
     assign clockSlow = clockCounter[25];
 
-    // Instantiate your processor
+    //added the pcValFPGA for correct access to pc
     processor_top fpgaProc (
-        .clk   (clockSlow),
-        .reset (resetButton)
+        .clk(clockSlow),
+        .reset(resetButton),
+        .pcValFPGA(fpga_out)
     );
-
-    assign fpga_out = fpgaProc.pc_current; //basically the prog counter value from my processor
-
 endmodule
