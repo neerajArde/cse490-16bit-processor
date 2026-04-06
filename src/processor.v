@@ -1,7 +1,7 @@
 module processor_top( // declaration of processor module which will instantiate all the components of the processor and connect them
     input clk, 
-    input reset 
-    output [15:0] pc_out
+    input reset, 
+    output [15:0] pcValFPGA
 );
 
     wire [15:0] instruction; //15:0 means 16 bits, wire declaration to hold the current insturction
